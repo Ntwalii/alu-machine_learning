@@ -1,21 +1,19 @@
 #!/usr/bin/env python3
-"""Script to calculate the sensitivity in a
-    confusion matrix
+""" Sensetivity
 """
 
 import numpy as np
 
 
 def sensitivity(confusion):
-    """
-    Function to calculate the sensitivity
+    """ calculates the sensitivity for each class in a confusion matrix
+
     Args:
-        confusion: numpy.ndarray of shape
-                    (classes, classes)
-    Returns: numpy.ndarray of shape (classes,)
-            containing the sensitivity of each class
+        confusion (classes, classes): confusion matrix where row indices
+        represent the correct labels and column indices represent the
+        predicted labels
+
+    Returns:
+        (classes,): sensitivity of each class
     """
-    TP = np.diag(confusion)
-    FN = np.sum(confusion, axis=1) - TP
-    TPR = TP / (TP + FN)
-    return TPR
+    return np.diag(confusion) / np.sum(confusion, axis=1)

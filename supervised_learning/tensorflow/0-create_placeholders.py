@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
-"""Script  that returns two placeholders,x and y, for the neural network"""
+"""Class Neuron that defines a single neuron performing binary classification
+"""
+
 
 import tensorflow as tf
 
 
 def create_placeholders(nx, classes):
+    """Function that returns two placeholders, x and y, for the neural network
+
+    Args:
+        nx (_type_): _description_
+        classes (_type_): _description_
     """
-
-    Args: placeholders named x and y, respectively
-
-    Returns: placeholders named x and y, respectively
-             x is the placeholder for the input data to the neural network
-             y is the placeholder for the one-hot labels for the input data
-
-    """
-    x = tf.placeholder(tf.float32, shape=[None, nx], name='x')
-    y = tf.placeholder(tf.float32, shape=[None, classes], name='y')
+    x = tf.placeholder("float", shape=[None, nx], name="x")
+    y = tf.placeholder("float", shape=[None, classes], name="y")
     return x, y

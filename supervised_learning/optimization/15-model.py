@@ -3,6 +3,7 @@
     optimization theory
 """
 
+
 import numpy as np
 import tensorflow as tf
 
@@ -48,8 +49,7 @@ def calculate_accuracy(y, y_pred):
     Returns: Prediction accuracy
 
     """
-    correct_prediction = tf.equal(tf.argmax(y, 1),
-                                  tf.argmax(y_pred, 1))
+    correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_pred, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     return accuracy
@@ -68,10 +68,12 @@ def create_layer(prev, n, activation):
     """
     # Average number of inputs and output connections.
     initializer = tf.contrib.layers.variance_scaling_initializer(
-        mode='FAN_AVG')
-    layer = tf.layers.Dense(units=n, activation=activation,
-                            kernel_initializer=initializer,
-                            name='layer')
+        mode="FAN_AVG"
+    )
+    layer = tf.layers.Dense(
+        units=n, activation=activation,
+        kernel_initializer=initializer, name="layer"
+    )
     return layer(prev)
 
 
@@ -90,9 +92,9 @@ def create_batch_norm_layer(prev, n, activation):
     init = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
     x = tf.layers.Dense(units=n, kernel_initializer=init)
     x_prev = x(prev)
-    scale = tf.Variable(tf.constant(1.0, shape=[n]), name='gamma')
+    scale = tf.Variable(tf.constant(1.0, shape=[n]), name="gamma")
     mean, variance = tf.nn.moments(x_prev, axes=[0])
-    offset = tf.Variable(tf.constant(0.0, shape=[n]), name='beta')
+    offset = tf.Variable(tf.constant(0.0, shape=[n]), name="beta")
     variance_epsilon = 1e-8
 
     normalization = tf.nn.batch_normalization(
@@ -122,9 +124,9 @@ def forward_prop(x, layer_sizes=[], activations=[]):
     layer = create_batch_norm_layer(x, layer_sizes[0], activations[0])
     for i in range(1, len(layer_sizes)):
         if i != len(layer_sizes) - 1:
-            layer = create_batch_norm_layer(layer,
-                                            layer_sizes[i],
-                                            activations[i])
+            layer = create_batch_norm_layer(
+                layer, layer_sizes[i], activations[i]
+            )
         else:
             layer = create_layer(layer, layer_sizes[i], activations[i])
     return layer
@@ -143,10 +145,9 @@ def create_Adam_op(loss, alpha, beta1, beta2, epsilon):
     Returns: Adam optimization operation
 
     """
-    optimizer = tf.train.AdamOptimizer(alpha,
-                                       beta1,
-                                       beta2,
-                                       epsilon).minimize(loss)
+    optimizer = tf.train.AdamOptimizer(
+        alpha, beta1, beta2, epsilon
+    ).minimize(loss)
     return optimizer
 
 
@@ -163,14 +164,26 @@ def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
     Returns:  learning rate decay operation
 
     """
-    LRD = tf.train.inverse_time_decay(alpha, global_step, decay_step,
-                                      decay_rate, staircase=True)
+    LRD = tf.train.inverse_time_decay(
+        alpha, global_step, decay_step, decay_rate, staircase=True
+    )
     return LRD
 
 
-def model(Data_train, Data_valid, layers, activations, alpha=0.001,
-          beta1=0.9, beta2=0.999, epsilon=1e-8, decay_rate=1,
-          batch_size=32, epochs=5, save_path='/tmp/model.ckpt'):
+def model(
+    Data_train,
+    Data_valid,
+    layers,
+    activations,
+    alpha=0.001,
+    beta1=0.9,
+    beta2=0.999,
+    epsilon=1e-8,
+    decay_rate=1,
+    batch_size=32,
+    epochs=5,
+    save_path="/tmp/model.ckpt",
+):
     """
 
     Args:
@@ -200,25 +213,25 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001,
     (X_train, Y_train) = Data_train
     (X_valid, Y_valid) = Data_valid
 
-    x = tf.placeholder(tf.float32, shape=[None, nx], name='x')
-    y = tf.placeholder(tf.float32, shape=[None, classes], name='y')
+    x = tf.placeholder(tf.float32, shape=[None, nx], name="x")
+    y = tf.placeholder(tf.float32, shape=[None, classes], name="y")
 
-    tf.add_to_collection('x', x)
-    tf.add_to_collection('y', y)
+    tf.add_to_collection("x", x)
+    tf.add_to_collection("y", y)
 
     y_pred = forward_prop(x, layers, activations)
-    tf.add_to_collection('y_pred', y_pred)
+    tf.add_to_collection("y_pred", y_pred)
 
     loss = calculate_loss(y, y_pred)
-    tf.add_to_collection('loss', loss)
+    tf.add_to_collection("loss", loss)
 
     accuracy = calculate_accuracy(y, y_pred)
-    tf.add_to_collection('accuracy', accuracy)
+    tf.add_to_collection("accuracy", accuracy)
 
     global_step = tf.Variable(0)
     alpha_op = learning_rate_decay(alpha, decay_rate, global_step, 1)
     train_op = create_Adam_op(loss, alpha_op, beta1, beta2, epsilon)
-    tf.add_to_collection('train_op', train_op)
+    tf.add_to_collection("train_op", train_op)
 
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()

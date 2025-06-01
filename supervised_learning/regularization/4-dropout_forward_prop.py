@@ -1,47 +1,36 @@
 #!/usr/bin/env python3
-"""Script to implement dropout in a forward propagation"""
+""" Forward Propagation with Dropout """
+
 
 import numpy as np
 
 
 def dropout_forward_prop(X, weights, L, keep_prob):
-    """
-    Function that uses dropout in a forward propagation
-    DNN
-    Args:
-        X: numpy.ndarray of shape (nx, m) containing
-            the input data for the network
-            nx: is the number of input features
-            m: is the number of data points
-        weights: dictionary of the weights and biases
-        of the neural network
+    """ Forward Propagation with Dropout
+        X: (nx, m) input data
+          nx: number of input features
+          m: number of examples
+        weights: dictionary of weights and biases of the neural network
         L: number of layers in the network
         keep_prob: probability that a node will be kept
-
-        All layers except the last should use the tanh activation function
-The last layer should use the softmax activation function
-
-    Returns:
-
+        Returns: dictionary containing the outputs of each
+        layer and the dropout mask used on each layer
     """
-    cache = {}  # dict that holds intermediate values of the network
+    cache = {}
     cache['A0'] = X
-    for layer in range(L):
-        W = weights["W" + str(layer + 1)]
-        A = cache["A" + str(layer)]
-        B = weights["b" + str(layer + 1)]
-        Z = np.matmul(W, A) + B
-        dropout = np.random.rand(Z.shape[0], Z.shape[1])
-        dropout = np.where(dropout < keep_prob, 1, 0)
-        # dropout = np.random.binomial(1, keep_prob, size=Z.shape)
-        if layer == L - 1:
-            softmax = np.exp(Z)
-            cache["A" + str(layer + 1)] = (softmax / np.sum(softmax, axis=0,
-                                                            keepdims=True))
+    for i in range(1, L + 1):
+        W = weights['W' + str(i)]
+        b = weights['b' + str(i)]
+        A = cache['A' + str(i - 1)]
+        Z = np.matmul(W, A) + b
+        if i < L:
+            A = np.tanh(Z)
+            D = np.random.rand(A.shape[0], A.shape[1])
+            D = np.where(D < keep_prob, 1, 0)
+            A = np.multiply(A, D)
+            A = A / keep_prob
+            cache['D' + str(i)] = D
         else:
-            tanh = np.tanh(Z)
-            cache["A" + str(layer + 1)] = tanh
-            cache["D" + str(layer + 1)] = dropout
-            cache["A" + str(layer + 1)] *= dropout
-            cache["A" + str(layer + 1)] /= keep_prob
+            A = np.exp(Z) / np.sum(np.exp(Z), axis=0, keepdims=True)
+        cache['A' + str(i)] = A
     return cache

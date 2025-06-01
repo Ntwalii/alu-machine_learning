@@ -1,42 +1,63 @@
 #!/usr/bin/env python3
-"""creating class neuron"""
-
-
+"""Module that defines a single neuron performing binary classification."""
 import numpy as np
 
 
 class Neuron:
-    """Single neuron performing binary classification"""
+    """A single neuron performing binary classification."""
 
     def __init__(self, nx):
+        """
+        Initializes the neuron.
+
+        Args:
+            nx (int): The number of input features to the neuron.
+
+        Raises:
+            TypeError: If nx is not an integer.
+            ValueError: If nx is less than 1.
+        """
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
         if nx < 1:
-            raise ValueError("nx must be a positive integer")
+            raise ValueError("nx must be positive")
 
-        self.__W = np.random.normal(size=(1, nx))
-        self.__b = 0
-        self.__A = 0
+        # Initialize private attributes
+        self.__W = np.random.randn(1, nx)
+        self.__b = 0  # Bias (initialized to 0)
+        self.__A = 0  # Activated output (initialized to 0)
 
-# Getter function
     @property
     def W(self):
-        """weights"""
+        """Getter for the weights vector."""
         return self.__W
 
     @property
     def b(self):
-        """bias"""
+        """Getter for the bias."""
         return self.__b
 
     @property
     def A(self):
-        """output"""
+        """Getter for the activated output."""
         return self.__A
 
     def forward_prop(self, X):
-        """forward prop"""
-        z = np.matmul(self.__W, X) + self.__b
-        sigmoid = 1 / (1 + np.exp(-z))
-        self.__A = sigmoid
+        """
+        Calculates the forward propagation of the neuron.
+
+        Args:
+            X (numpy.ndarray): Input data with shape (nx, m),
+                               where nx is the number of input features,
+                               and m is the number of examples.
+
+        Returns:
+            numpy.ndarray: The activated output of the neuron.
+        """
+        # Linear transformation
+        Z = np.dot(self.__W, X) + self.__b
+
+        # Sigmoid activation
+        self.__A = 1 / (1 + np.exp(-Z))
+
         return self.__A

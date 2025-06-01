@@ -1,36 +1,25 @@
 #!/usr/bin/env python3
-"""Script to create a batch normalization layer in a DNN
-    using tensorflow"""
+""" Batch Normalization with tensorflow
+"""
 
 import tensorflow as tf
 
 
 def create_batch_norm_layer(prev, n, activation):
-    """
-    Function that normalized a batch in a DNN with Tf
+    """ Batch Normalization with tensorflow
+
     Args:
-        prev: the activated output of the previous layer
-        n: number of nodes in the layer to be created
-        activation: activation function that should be used
-                    on the output of the layer
-
-    Returns: tensor of the activated output for the layer
-
+        prev (): is the activated output of the previous layer
+        n (int): is the number of nodes in the layer to be created
+        activation (): is the activation function that should be used on the
+        output of the layer
     """
     init = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
-    x = tf.layers.Dense(units=n, activation=None, kernel_initializer=init)
-    x_prev = x(prev)
-    scale = tf.Variable(tf.constant(1.0, shape=[n]), name='gamma')
-    mean, variance = tf.nn.moments(x_prev, axes=[0])
-    offset = tf.Variable(tf.constant(0.0, shape=[n]), name='beta')
-    variance_epsilon = 1e-8
-
-    normalization = tf.nn.batch_normalization(
-        x_prev,
-        mean,
-        variance,
-        offset,
-        scale,
-        variance_epsilon,
-    )
-    return activation(normalization)
+    model = tf.layers.Dense(units=n, kernel_initializer=init)
+    Z = model(prev)
+    gamma = tf.Variable(tf.constant(1.0, shape=[n]), name='gamma')
+    beta = tf.Variable(tf.constant(0.0, shape=[n]), name='beta')
+    mean, variance = tf.nn.moments(Z, axes=[0])
+    epsilon = 1e-8
+    Z_norm = tf.nn.batch_normalization(Z, mean, variance, beta, gamma, epsilon)
+    return activation(Z_norm)

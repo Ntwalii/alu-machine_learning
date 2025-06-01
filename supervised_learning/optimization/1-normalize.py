@@ -1,17 +1,13 @@
 #!/usr/bin/env python3
-""" Script to normalize a matrix"""
+""" Normalize"""
 
 
 def normalize(X, m, s):
-    """
-    function to normalize a matrix
-    Args:
-        X: numpy.ndarray of shape (d, nx) to normalize
-        m: numpy.ndarray of shape (nx,) that contains
-            the mean of all features of X
-        s: numpy.ndarray of shape (nx,) that contains
-            the standard deviation of all features of X
-    Returns: Normalized matrix
+    """ Normalize
 
+    Args:
+        X (np.array): with shape (m, nx) to normalize
+        m (_type_): _description_
+        s (_type_): _description_
     """
     return (X - m) / s

@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
-"""Script to create a tf layer that
-    includes l2 regularization
+""" Create a Tensorflow Layer with L2 Regularization
 """
+
 
 import tensorflow as tf
 
 
 def l2_reg_create_layer(prev, n, activation, lambtha):
-    """
-    Function to create a tf layer with L2 regularization
+    """ Create a Layer with L2 Regularization
 
+    Args:
+        prev (_type_): _description_
+        n (_type_): _description_
+        activation (_type_): _description_
+        lambtha (_type_): _description_
     """
-    regularizer = tf.contrib.layers.l2_regularizer(lambtha)
     init = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
-    tensor = tf.layers.Dense(units=n, activation=activation,
-                             kernel_initializer=init,
-                             kernel_regularizer=regularizer)
-    return tensor(prev)
+    reg = tf.contrib.layers.l2_regularizer(lambtha)
+    layer = tf.layers.Dense(units=n, activation=activation,
+                            kernel_initializer=init,
+                            kernel_regularizer=reg)
+    return layer(prev)

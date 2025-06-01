@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
-"""one hot encoder"""
+
+""" One-Hot Encode
+"""
 
 
 import numpy as np
 
 
 def one_hot_encode(Y, classes):
-    """converts a numeric label vector into a one-hot matrix"""
+    """Converts a numeric label vector into a one-hot matrix
+
+    Args:
+        Y (_type_): _description_
+        classes (_type_): _description_
+    """
     if not isinstance(Y, np.ndarray) or len(Y) == 0:
         return None
     if not isinstance(classes, int) or classes < 0:

@@ -1,21 +1,11 @@
 #!/usr/bin/env python3
-"""Script for accuracy in tensor flow"""
-
+""" create layer """
 import tensorflow as tf
 
 
 def calculate_accuracy(y, y_pred):
-    """
-    method to calculate the accuracy of a prediction in a DNN
-    Args:
-        y: input data type label in a placeholder
-        y_pred: type tensor that contains the DNN prediction
-
-    Returns: Prediction accuracy
-
-    """
-    correct_prediction = tf.equal(tf.argmax(y, 1),
-                                  tf.argmax(y_pred, 1))
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-
-    return accuracy
+    """ calculate accuracy"""
+    p_m = tf.arg_max(y_pred, 1)
+    y_m = tf.arg_max(y, 1)
+    e = tf.equal(y_m, p_m)
+    return tf.reduce_mean(tf.cast(e, tf.float32))

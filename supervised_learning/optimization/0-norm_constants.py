@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-"""Script of normalization constants in a matrix"""
+""" Normalization Constants"""
 
 import numpy as np
 
 
 def normalization_constants(X):
-    """
-    function to get the stdev and mean
-    Args:
-        X: numpy.ndarray of shape (m, nx) to normalize
-    Returns: mean and standard deviation of each feature, respectively
+    """ Normalization Constants
 
+    Args:
+        X (_type_): _description_
+    Returns:
+        _type_: _description_
     """
-    mean = np.mean(X, axis=0)
-    stdev = np.std(X, axis=0)
-    return mean, stdev
+
+    return X.mean(axis=0), X.std(axis=0)

@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Script to calculate the precision in a
-    confusion matrix
+""" Precision
 """
 
 import numpy as np
 
 
 def precision(confusion):
-    """
-    Function to calculate the precision
+    """ calculates the precision for each class in a confusion matrix
+
     Args:
-        confusion: numpy.ndarray of shape
-                    (classes, classes)
+        confusion (classes, classes): confusion matrix where row indices
+        represent the correct labels and column indices represent the
+        predicted labels
+
+    Returns:
+        (classes,): precision of each class
     """
-    TP = np.diag(confusion)
-    FP = np.sum(confusion, axis=0) - TP
-    PPV = TP / (TP + FP)
-    return PPV
+    return np.diag(confusion) / np.sum(confusion, axis=0)

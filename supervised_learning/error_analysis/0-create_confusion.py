@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-"""Script to create a confusion matrix"""
+""" Confusion matrix
+"""
 
 import numpy as np
 
 
 def create_confusion_matrix(labels, logits):
-    """
-    Function to create a confusion matrix
+    """ creates a confusion matrix
+
     Args:
-        labels: one-hot numpy.ndarray of shape (m, classes)
-                   m: is the number of data points
-                   classes: is the number of classes
-        logits: one-hot numpy.ndarray of shape (m, classes)
-                containing the predicted labels
+        labels (m, classes): correct labels in one-hot format
+        logits (m, classes): predicted labels in one-hot format
     """
-    return np.matmul(labels.T, logits)
+    m, classes = labels.shape
+    confusion = np.zeros((classes, classes))
+    for i in range(m):
+        confusion[np.argmax(labels[i]), np.argmax(logits[i])] += 1
+    return confusion

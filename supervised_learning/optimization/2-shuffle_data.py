@@ -1,20 +1,15 @@
 #!/usr/bin/env python3
-"""Script to shuffle data in a matrix"""
+""" Shuffle Data"""
 
 import numpy as np
 
 
 def shuffle_data(X, Y):
-    """
-    Function to shuffle data in a matrix
-    Args:
-        X: numpy.ndarray of shape (m, nx) to shuffle
-        Y: numpy.ndarray of shape (m, ny) to shuffle
-    Returns: the shuffled X and Y matrices
+    """ Shuffle data points in two matrices the same way
 
+    Args:
+        X (_type_): _description_
+        Y (_type_): _description_
     """
-    m = X.shape[0]
-    shuffle = np.random.permutation(m)
-    X_shuffled = X[shuffle]
-    Y_shuffled = Y[shuffle]
-    return X_shuffled, Y_shuffled
+    s = np.random.permutation(X.shape[0])
+    return X[s], Y[s]
